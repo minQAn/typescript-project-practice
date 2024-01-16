@@ -2,11 +2,11 @@ import { BaseComponent } from "../component.js";
 export class PageItemComponent extends BaseComponent {
     constructor() {
         super(`
-            <li class="page-item">
+            <li class="page-item">                
+                <section class="page__body"></section>                
                 <div class="page-item__controls">
                     <button class="close">&times;</button>
                 </div>
-                <section class="page__body"></section>                
             </li>
         `);
         const closeBtn = this.element.querySelector('.close');

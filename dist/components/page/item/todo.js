@@ -10,7 +10,7 @@ export class TodoComponent extends BaseComponent {
         `);
         const titleElement = this.element.querySelector('.todo__title');
         titleElement.textContent = title;
-        const todoElement = this.element.querySelector('#todo-checkbox');
+        const todoElement = this.element.querySelector('.todo-label');
         todoElement.textContent = todo;
     }
 }

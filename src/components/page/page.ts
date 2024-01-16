@@ -19,11 +19,11 @@ export class PageItemComponent extends BaseComponent<HTMLElement> implements Sec
 
     constructor() {
         super(`
-            <li class="page-item">
+            <li class="page-item">                
+                <section class="page__body"></section>                
                 <div class="page-item__controls">
                     <button class="close">&times;</button>
                 </div>
-                <section class="page__body"></section>                
             </li>
         `);
 

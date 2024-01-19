@@ -17,6 +17,7 @@ interface SectionContainer extends Component, Composable {
     setOnCloseListener(listener: OnCloseListener): void;
     setOnDragStateListener(listener: OnDragStateListener<SectionContainer>): void;
     muteChildren(state: 'mute' | 'unmute'): void;
+    getBoundingRect(): DOMRect;
 }
 
 export class PageItemComponent extends BaseComponent<HTMLElement> implements SectionContainer {
@@ -101,6 +102,10 @@ export class PageItemComponent extends BaseComponent<HTMLElement> implements Sec
     notifyDragObservers(state: DragState) {
         this.dragStateListener && this.dragStateListener(this, state); // this..?
     }
+
+    getBoundingRect(): DOMRect {
+        return this.element.getBoundingClientRect();
+    }
 }
 
 export class PageComponent extends BaseComponent<HTMLUListElement> implements Composable {    
@@ -136,8 +141,11 @@ export class PageComponent extends BaseComponent<HTMLUListElement> implements Co
             return;
         }
         if(this.dragTarget && this.dragTarget !== this.dropTarget) {
+            const dropY = event.clientY;
+            const srcElement = this.dragTarget.getBoundingRect();
+
             this.dragTarget.removeFrom(this.element);
-            this.dropTarget.attach(this.dragTarget, 'beforebegin'); // 형제요소에 붙여넣을 것임으로 beforebegin
+            this.dropTarget.attach(this.dragTarget, dropY < srcElement.y? 'beforebegin' : 'afterend'); // 형제요소에 붙여넣을 것임으로 beforebegin
         }
     }    
 
@@ -180,5 +188,5 @@ export class PageComponent extends BaseComponent<HTMLUListElement> implements Co
         this.children.forEach((section: SectionContainer) => {
             section.muteChildren(state);
         })
-    }
+    }    
 }

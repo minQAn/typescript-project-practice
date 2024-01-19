@@ -63,6 +63,9 @@ export class PageItemComponent extends BaseComponent {
     notifyDragObservers(state) {
         this.dragStateListener && this.dragStateListener(this, state);
     }
+    getBoundingRect() {
+        return this.element.getBoundingClientRect();
+    }
 }
 export class PageComponent extends BaseComponent {
     constructor(pageItemConstructor) {
@@ -86,8 +89,10 @@ export class PageComponent extends BaseComponent {
             return;
         }
         if (this.dragTarget && this.dragTarget !== this.dropTarget) {
+            const dropY = event.clientY;
+            const srcElement = this.dragTarget.getBoundingRect();
             this.dragTarget.removeFrom(this.element);
-            this.dropTarget.attach(this.dragTarget, 'beforebegin');
+            this.dropTarget.attach(this.dragTarget, dropY < srcElement.y ? 'beforebegin' : 'afterend');
         }
     }
     addChild(section) {

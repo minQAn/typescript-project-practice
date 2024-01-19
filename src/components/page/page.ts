@@ -18,6 +18,7 @@ interface SectionContainer extends Component, Composable {
     setOnDragStateListener(listener: OnDragStateListener<SectionContainer>): void;
     muteChildren(state: 'mute' | 'unmute'): void;
     getBoundingRect(): DOMRect;
+    onDropped(): void;
 }
 
 export class PageItemComponent extends BaseComponent<HTMLElement> implements SectionContainer {
@@ -80,23 +81,27 @@ export class PageItemComponent extends BaseComponent<HTMLElement> implements Sec
     }
 
     onDragStart(_: DragEvent) {
-        console.log('DragStart: ');
+        // console.log('DragStart: ');
         this.notifyDragObservers('start')
+        this.element.classList.add('lifted'); //for styling
     }
 
     onDragEnd(_: DragEvent) {
-        console.log('DragEnd: ');
-        this.notifyDragObservers('stop')
+        // console.log('DragEnd: ');
+        this.notifyDragObservers('stop');
+        this.element.classList.remove('lifted'); //for styling
     }
 
     onDragEnter(_: DragEvent) {
-        console.log('DragEnter: ');
-        this.notifyDragObservers('enter')
+        // console.log('DragEnter: ');
+        this.notifyDragObservers('enter');
+        this.element.classList.add('drop-area'); //for styling
     }
 
     onDragLeave(_: DragEvent) {
-        console.log('DragLeave: ');
-        this.notifyDragObservers('leave')
+        // console.log('DragLeave: ');
+        this.notifyDragObservers('leave');
+        this.element.classList.remove('drop-area'); // for styling
     }
 
     notifyDragObservers(state: DragState) {
@@ -106,6 +111,11 @@ export class PageItemComponent extends BaseComponent<HTMLElement> implements Sec
     getBoundingRect(): DOMRect {
         return this.element.getBoundingClientRect();
     }
+
+    onDropped() {
+        this.element.classList.remove('drop-area');
+    }
+
 }
 
 export class PageComponent extends BaseComponent<HTMLUListElement> implements Composable {    
@@ -135,7 +145,7 @@ export class PageComponent extends BaseComponent<HTMLUListElement> implements Co
     // drop이 dropend보다 먼저 발생한다.
     onDrop(event: DragEvent) {
         event.preventDefault();
-        console.log('Drop: ', event);
+        // console.log('Drop: ', event);
         // 여기에서 위치를 바꿔준다.
         if(!this.dropTarget) {
             return;
@@ -147,6 +157,8 @@ export class PageComponent extends BaseComponent<HTMLUListElement> implements Co
             this.dragTarget.removeFrom(this.element);
             this.dropTarget.attach(this.dragTarget, dropY < srcElement.y? 'beforebegin' : 'afterend'); // 형제요소에 붙여넣을 것임으로 beforebegin
         }
+
+        this.dropTarget.onDropped();
     }    
 
     addChild(section: Component) {

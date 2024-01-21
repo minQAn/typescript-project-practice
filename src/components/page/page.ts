@@ -122,6 +122,9 @@ export class PageComponent extends BaseComponent<HTMLUListElement> implements Co
     private children = new Set<SectionContainer>(); // Set자료구조
     private dragTarget?: SectionContainer;
     private dropTarget?: SectionContainer;
+    private sound = new Audio(
+        "https://assets.mixkit.co/active_storage/sfx/3005/3005-preview.mp3"
+    );
 
     constructor(private pageItemConstructor: SectionContainerConstructor) {
         super(`<ul class="page"></ul>`);  
@@ -153,6 +156,8 @@ export class PageComponent extends BaseComponent<HTMLUListElement> implements Co
         if(this.dragTarget && this.dragTarget !== this.dropTarget) {
             const dropY = event.clientY;
             const srcElement = this.dragTarget.getBoundingRect();
+
+            this.sound.play();
 
             this.dragTarget.removeFrom(this.element);
             this.dropTarget.attach(this.dragTarget, dropY < srcElement.y? 'beforebegin' : 'afterend'); // 형제요소에 붙여넣을 것임으로 beforebegin

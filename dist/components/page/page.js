@@ -75,6 +75,7 @@ export class PageComponent extends BaseComponent {
         super(`<ul class="page"></ul>`);
         this.pageItemConstructor = pageItemConstructor;
         this.children = new Set();
+        this.sound = new Audio("https://assets.mixkit.co/active_storage/sfx/3005/3005-preview.mp3");
         this.element.addEventListener('dragover', (event) => {
             this.onDragOver(event);
         });
@@ -93,6 +94,7 @@ export class PageComponent extends BaseComponent {
         if (this.dragTarget && this.dragTarget !== this.dropTarget) {
             const dropY = event.clientY;
             const srcElement = this.dragTarget.getBoundingRect();
+            this.sound.play();
             this.dragTarget.removeFrom(this.element);
             this.dropTarget.attach(this.dragTarget, dropY < srcElement.y ? 'beforebegin' : 'afterend');
         }
